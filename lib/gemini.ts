@@ -1,9 +1,9 @@
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenAI, ThinkingLevel } from '@google/genai';
 
 export const MODEL = 'gemini-3.5-flash';
 export const TEMPERATURE = 1.0;
-export const MAX_OUTPUT_TOKENS = 1024;
-export const GEMINI_TIMEOUT_MS = 8_000;
+export const MAX_OUTPUT_TOKENS = 4096;
+export const GEMINI_TIMEOUT_MS = 20_000;
 
 export const DEFAULT_REPLY =
   'ขออภัยครับ เรื่องนี้ชิมิยังตอบไม่ได้ เดี๋ยวแอดมินร้านมาตอบให้นะครับ 🙏 หรือโทรสอบถามที่ 098-246-8881 ได้เลยครับ';
@@ -94,6 +94,7 @@ async function generateWithTimeout(userTurn: string, timeoutMs: number) {
         systemInstruction: SYSTEM_PROMPT,
         temperature: TEMPERATURE,
         maxOutputTokens: MAX_OUTPUT_TOKENS,
+        thinkingConfig: { thinkingLevel: ThinkingLevel.LOW },
       },
     }),
     new Promise<never>((_, reject) => {
@@ -112,6 +113,7 @@ function judgeResult(res: Awaited<ReturnType<GoogleGenAI['models']['generateCont
     thoughtsTokenCount: usage?.thoughtsTokenCount,
     candidatesTokenCount: usage?.candidatesTokenCount,
     totalTokenCount: usage?.totalTokenCount,
+    textLength: res.text?.length ?? 0,
     latencyMs,
   }));
 
