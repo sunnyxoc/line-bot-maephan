@@ -1,6 +1,6 @@
 import { validateSignature, messagingApi, type WebhookEvent } from '@line/bot-sdk';
 import { waitUntil } from '@vercel/functions';
-import { getFaqCsv } from '@/lib/sheet';
+import { getFaqRows } from '@/lib/sheet';
 import { askChimi, DEFAULT_REPLY, GREETING_REPLY } from '@/lib/gemini';
 
 export const runtime = 'nodejs';
@@ -70,13 +70,13 @@ async function handleEvent(event: WebhookEvent) {
   const userMessage = event.message.text;
   console.log('[line]', JSON.stringify({ type: 'text', length: userMessage.length }));
 
-  const faqCsv = await getFaqCsv();
-  if (!faqCsv) {
+  const rows = await getFaqRows();
+  if (!rows || rows.length === 0) {
     await reply(replyToken, DEFAULT_REPLY);
     return;
   }
 
-  const answer = await askChimi(userMessage, faqCsv);
+  const answer = await askChimi(userMessage, rows);
   await reply(replyToken, answer);
 }
 

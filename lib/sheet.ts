@@ -1,4 +1,16 @@
+import Papa from 'papaparse';
+
 type CacheEntry = { csv: string; fetchedAt: number };
+
+export type FaqRow = {
+  id: string;
+  category: string;
+  keyword: string;
+  answer: string;
+  status: string;
+};
+
+const READY_STATUS = 'พร้อมใช้';
 
 let cache: CacheEntry | null = null;
 let lastGood: CacheEntry | null = null;
@@ -55,4 +67,26 @@ export async function getFaqCsv(): Promise<string | null> {
     console.error('[sheet] fetch failed', err instanceof Error ? err.message : err);
     return lastGood?.csv ?? null;
   }
+}
+
+type SheetRecord = Record<string, string | undefined>;
+
+export async function getFaqRows(): Promise<FaqRow[] | null> {
+  const csv = await getFaqCsv();
+  if (!csv) return null;
+
+  const parsed = Papa.parse<SheetRecord>(csv, {
+    header: true,
+    skipEmptyLines: true,
+  });
+
+  return parsed.data
+    .map((record): FaqRow => ({
+      id: (record['ID'] ?? '').trim(),
+      category: (record['หมวดหมู่'] ?? '').trim(),
+      keyword: (record['คำถาม/Keyword'] ?? '').trim(),
+      answer: (record['คำตอบ'] ?? '').trim(),
+      status: (record['สถานะ'] ?? '').trim(),
+    }))
+    .filter((row) => row.status === READY_STATUS && row.id !== '' && row.answer !== '');
 }
