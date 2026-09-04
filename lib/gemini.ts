@@ -1,7 +1,7 @@
 import { GoogleGenAI, ThinkingLevel } from '@google/genai';
 import type { FaqRow } from './sheet';
 
-export const MODEL = 'gemini-3.5-flash';
+export const MODEL = 'gemini-3.5-flash-lite';
 export const TEMPERATURE = 1.0;
 export const MAX_OUTPUT_TOKENS = 512;
 export const GEMINI_TIMEOUT_MS = 20_000;
