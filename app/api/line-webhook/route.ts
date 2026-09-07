@@ -1,7 +1,17 @@
 import { validateSignature, messagingApi, type WebhookEvent } from '@line/bot-sdk';
 import { waitUntil } from '@vercel/functions';
 import { getFaqRows } from '@/lib/sheet';
-import { askChimi, DEFAULT_REPLY, GREETING_REPLY } from '@/lib/gemini';
+import {
+  askChimi,
+  DEFAULT_REPLY,
+  GREETING_REPLY,
+  HANDOVER_REPLY,
+  MUTE_MINUTES,
+  MUTE_ON_KEYWORDS,
+  UNMUTE_ON_KEYWORDS,
+  COMPLAINT_KEYWORDS,
+} from '@/lib/gemini';
+import { isMuted, mute, unmute } from '@/lib/mute';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -50,10 +60,59 @@ async function reply(replyToken: string, text: string) {
   }
 }
 
+function getConversationId(event: WebhookEvent): string | null {
+  const source = event.source;
+  if (source.type === 'group') return source.groupId;
+  if (source.type === 'room') return source.roomId;
+  if (source.type === 'user') return source.userId ?? null;
+  return null;
+}
+
 async function handleEvent(event: WebhookEvent) {
   if (event.type !== 'message') return;
 
   const replyToken = event.replyToken;
+  const conversationId = getConversationId(event);
+
+  if (event.message.type === 'text') {
+    const text = event.message.text;
+
+    if (UNMUTE_ON_KEYWORDS.some((keyword) => text.includes(keyword))) {
+      if (conversationId) await unmute(conversationId);
+      console.log('[mute]', JSON.stringify({ action: 'unmute', conversationId, reason: 'keyword' }));
+      await reply(replyToken, 'เปิดชิมิแล้วครับ');
+      return;
+    }
+
+    if (MUTE_ON_KEYWORDS.some((keyword) => text.includes(keyword))) {
+      if (conversationId) await mute(conversationId, MUTE_MINUTES);
+      console.log('[mute]', JSON.stringify({ action: 'mute', conversationId, reason: 'keyword' }));
+      await reply(replyToken, 'รับทราบครับ ชิมิจะหยุดตอบห้องนี้ 2 ชั่วโมง');
+      return;
+    }
+  }
+
+  if (conversationId && (await isMuted(conversationId))) {
+    console.log('[mute]', JSON.stringify({ action: 'skipped', conversationId, reason: 'muted' }));
+    return;
+  }
+
+  if (event.message.type === 'text') {
+    const text = event.message.text;
+    const matchedKeyword = COMPLAINT_KEYWORDS.find((keyword) => text.includes(keyword));
+
+    if (matchedKeyword) {
+      await reply(replyToken, HANDOVER_REPLY);
+      if (conversationId) await mute(conversationId, MUTE_MINUTES);
+      console.log('[mute]', JSON.stringify({
+        action: 'mute',
+        conversationId,
+        reason: 'complaint detected',
+        keyword: matchedKeyword,
+      }));
+      return;
+    }
+  }
 
   if (event.message.type === 'sticker') {
     console.log('[line]', JSON.stringify({ type: 'sticker' }));
