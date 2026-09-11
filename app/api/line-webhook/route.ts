@@ -12,6 +12,7 @@ import {
   COMPLAINT_KEYWORDS,
 } from '@/lib/gemini';
 import { isMuted, mute, unmute } from '@/lib/mute';
+import { handleRichMenu } from '@/lib/richmenu';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -32,12 +33,9 @@ function rememberRetryKey(key: string) {
   }
 }
 
-async function reply(replyToken: string, text: string) {
+async function replyMessages(replyToken: string, messages: messagingApi.Message[]) {
   try {
-    await client.replyMessage({
-      replyToken,
-      messages: [{ type: 'text', text }],
-    });
+    await client.replyMessage({ replyToken, messages });
   } catch (err) {
     const status = (err as { status?: number; statusCode?: number })?.status
       ?? (err as { statusCode?: number })?.statusCode;
@@ -52,12 +50,16 @@ async function reply(replyToken: string, text: string) {
     } else {
       console.error('[line] reply failed, retrying once', message);
       try {
-        await client.replyMessage({ replyToken, messages: [{ type: 'text', text }] });
+        await client.replyMessage({ replyToken, messages });
       } catch (retryErr) {
         console.error('[line] retry failed', retryErr instanceof Error ? retryErr.message : retryErr);
       }
     }
   }
+}
+
+async function reply(replyToken: string, text: string) {
+  await replyMessages(replyToken, [{ type: 'text', text }]);
 }
 
 function getConversationId(event: WebhookEvent): string | null {
@@ -95,6 +97,20 @@ async function handleEvent(event: WebhookEvent) {
   if (conversationId && (await isMuted(conversationId))) {
     console.log('[mute]', JSON.stringify({ action: 'skipped', conversationId, reason: 'muted' }));
     return;
+  }
+
+  if (event.message.type === 'text') {
+    const text = event.message.text;
+    const richMenuResult = handleRichMenu(text);
+
+    if (richMenuResult) {
+      console.log('[richmenu]', JSON.stringify({ keyword: richMenuResult.keyword }));
+      await replyMessages(replyToken, richMenuResult.messages);
+      if (richMenuResult.action === 'reply_and_mute' && conversationId) {
+        await mute(conversationId, richMenuResult.muteMinutes);
+      }
+      return;
+    }
   }
 
   if (event.message.type === 'text') {
