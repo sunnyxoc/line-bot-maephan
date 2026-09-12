@@ -21,7 +21,7 @@ function lineOrderButton(): messagingApi.FlexBox {
     cornerRadius: '12px',
     paddingAll: '10px',
     alignItems: 'center',
-    backgroundColor: '#C98A3E',
+    backgroundColor: '#E6C88A',
     action: { type: 'message', text: 'สั่งซื้อผ่านไลน์' },
     contents: [
       {
@@ -29,11 +29,11 @@ function lineOrderButton(): messagingApi.FlexBox {
         layout: 'vertical',
         flex: 1,
         contents: [
-          { type: 'text', text: 'สั่งผ่าน LINE', size: 'sm', weight: 'bold', color: '#1A1A1A' },
-          { type: 'text', text: 'คุยกับแอดมิน • แนะนำสินค้าให้ได้', size: 'xxs', color: '#4A3A1A', margin: 'none' },
+          { type: 'text', text: 'สั่งผ่าน LINE', size: 'sm', weight: 'bold', color: '#100C08' },
+          { type: 'text', text: 'คุยกับแอดมิน • แนะนำสินค้าให้ได้', size: 'xxs', color: '#6B5636', margin: 'none' },
         ],
       },
-      { type: 'text', text: '›', flex: 0, size: 'md', color: '#1A1A1A' },
+      { type: 'text', text: '›', flex: 0, size: 'md', color: '#1E160A' },
     ],
   };
 }
@@ -46,7 +46,7 @@ function marketplaceOrderButton(title: string, uri: string): messagingApi.FlexBo
     paddingAll: '10px',
     alignItems: 'center',
     backgroundColor: '#16130F',
-    borderColor: '#967E54',
+    borderColor: '#CDAF76',
     borderWidth: '1px',
     action: { type: 'uri', uri },
     contents: [
@@ -99,7 +99,7 @@ const ORDER_FLEX: messagingApi.FlexMessage = {
       paddingAll: '14px',
       contents: [
         { type: 'separator', color: '#3D3428' },
-        { type: 'text', text: 'รสชาติที่ใส่ใจในทุกคำ', size: 'xs', color: '#C9922E', align: 'center', margin: 'md' },
+        { type: 'text', text: 'รสชาติที่ใส่ใจในทุกคำ', size: 'xs', color: '#EBB863', align: 'center', margin: 'md' },
       ],
     },
     styles: {
