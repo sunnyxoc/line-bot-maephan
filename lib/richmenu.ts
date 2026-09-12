@@ -122,18 +122,18 @@ type Product = {
 const PRODUCTS: Product[] = [
   {
     keyword: 'รายละเอียดปลาสลิด',
-    carouselHeroUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789232004/1.png',
+    carouselHeroUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789247264/menu-plasalid.png.png',
     weightLabel: '150 กรัม',
     price: '฿199',
-    detailImageUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789231830/1.png',
+    detailImageUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789247424/detail-plasalid.png.png',
     buyUri: 'https://shop.line.me/@067xnyhv/product/1008331248',
   },
   {
     keyword: 'รายละเอียดกุ้งเสียบ',
-    carouselHeroUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789232005/2.png',
+    carouselHeroUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789247262/menu-kungsiab.png.png',
     weightLabel: '150 กรัม',
     price: '฿179',
-    detailImageUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789231844/2.png',
+    detailImageUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789247425/detail-kungsiab.png.png',
     buyUri: 'https://shop.line.me/@067xnyhv/product/1008331291',
   },
 ];
