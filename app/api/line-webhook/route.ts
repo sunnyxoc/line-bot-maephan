@@ -143,7 +143,7 @@ async function handleEvent(event: WebhookEvent) {
   }
 
   const userMessage = event.message.text;
-  console.log('[line]', JSON.stringify({ type: 'text', length: userMessage.length }));
+  console.log('[line]', JSON.stringify({ type: 'text', length: userMessage.length, userId: event.source?.userId }));
 
   const rows = await getFaqRows();
   if (!rows || rows.length === 0) {
