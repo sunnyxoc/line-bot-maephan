@@ -19,7 +19,7 @@ function lineOrderButton(): messagingApi.FlexBox {
     type: 'box',
     layout: 'horizontal',
     cornerRadius: '12px',
-    paddingAll: '16px',
+    paddingAll: '10px',
     alignItems: 'center',
     backgroundColor: '#C98A3E',
     action: { type: 'message', text: 'สั่งซื้อผ่านไลน์' },
@@ -29,11 +29,11 @@ function lineOrderButton(): messagingApi.FlexBox {
         layout: 'vertical',
         flex: 1,
         contents: [
-          { type: 'text', text: 'สั่งผ่าน LINE', size: 'md', weight: 'bold', color: '#1A1A1A' },
-          { type: 'text', text: 'คุยกับแอดมิน • แนะนำสินค้าให้ได้', size: 'xxs', color: '#4A3A1A' },
+          { type: 'text', text: 'สั่งผ่าน LINE', size: 'sm', weight: 'bold', color: '#1A1A1A' },
+          { type: 'text', text: 'คุยกับแอดมิน • แนะนำสินค้าให้ได้', size: 'xxs', color: '#4A3A1A', margin: 'none' },
         ],
       },
-      { type: 'text', text: '›', flex: 0, size: 'xl', color: '#1A1A1A' },
+      { type: 'text', text: '›', flex: 0, size: 'md', color: '#1A1A1A' },
     ],
   };
 }
@@ -43,7 +43,7 @@ function marketplaceOrderButton(title: string, uri: string): messagingApi.FlexBo
     type: 'box',
     layout: 'horizontal',
     cornerRadius: '12px',
-    paddingAll: '16px',
+    paddingAll: '10px',
     alignItems: 'center',
     backgroundColor: '#16130F',
     borderColor: '#967E54',
@@ -55,11 +55,11 @@ function marketplaceOrderButton(title: string, uri: string): messagingApi.FlexBo
         layout: 'vertical',
         flex: 1,
         contents: [
-          { type: 'text', text: title, size: 'md', weight: 'bold', color: '#F5EDE0' },
-          { type: 'text', text: 'ร้านค้าทางการ แม่พันธ์', size: 'xxs', color: '#968E82' },
+          { type: 'text', text: title, size: 'sm', weight: 'bold', color: '#F5EDE0' },
+          { type: 'text', text: 'ร้านค้าทางการ แม่พันธ์', size: 'xxs', color: '#968E82', margin: 'none' },
         ],
       },
-      { type: 'text', text: '›', flex: 0, size: 'xl', color: '#C9922E' },
+      { type: 'text', text: '›', flex: 0, size: 'md', color: '#C9922E' },
     ],
   };
 }
@@ -84,7 +84,7 @@ const ORDER_FLEX: messagingApi.FlexMessage = {
       paddingStart: '20px',
       paddingEnd: '20px',
       paddingBottom: '20px',
-      spacing: '10px',
+      spacing: 'sm',
       contents: [
         lineOrderButton(),
         marketplaceOrderButton('สั่งผ่าน Shopee', 'https://shopee.co.th/shop/1914406878'),
