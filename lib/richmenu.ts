@@ -19,9 +19,9 @@ function lineOrderButton(): messagingApi.FlexBox {
     type: 'box',
     layout: 'horizontal',
     cornerRadius: '12px',
-    paddingAll: '14px',
+    paddingAll: '16px',
     alignItems: 'center',
-    backgroundColor: '#C9922E',
+    backgroundColor: '#C98A3E',
     action: { type: 'message', text: 'สั่งซื้อผ่านไลน์' },
     contents: [
       {
@@ -30,7 +30,7 @@ function lineOrderButton(): messagingApi.FlexBox {
         flex: 1,
         contents: [
           { type: 'text', text: 'สั่งผ่าน LINE', size: 'md', weight: 'bold', color: '#1A1A1A' },
-          { type: 'text', text: 'คุยกับแอดมิน • แนะนำสินค้าให้ได้', size: 'xs', color: '#4A3A1A' },
+          { type: 'text', text: 'คุยกับแอดมิน • แนะนำสินค้าให้ได้', size: 'xxs', color: '#4A3A1A' },
         ],
       },
       { type: 'text', text: '›', flex: 0, size: 'xl', color: '#1A1A1A' },
@@ -43,10 +43,10 @@ function marketplaceOrderButton(title: string, uri: string): messagingApi.FlexBo
     type: 'box',
     layout: 'horizontal',
     cornerRadius: '12px',
-    paddingAll: '14px',
+    paddingAll: '16px',
     alignItems: 'center',
-    backgroundColor: '#1A1613',
-    borderColor: '#3D3428',
+    backgroundColor: '#16130F',
+    borderColor: '#967E54',
     borderWidth: '1px',
     action: { type: 'uri', uri },
     contents: [
@@ -56,7 +56,7 @@ function marketplaceOrderButton(title: string, uri: string): messagingApi.FlexBo
         flex: 1,
         contents: [
           { type: 'text', text: title, size: 'md', weight: 'bold', color: '#F5EDE0' },
-          { type: 'text', text: 'ร้านค้าทางการ แม่พันธ์', size: 'xs', color: '#9C8B73' },
+          { type: 'text', text: 'ร้านค้าทางการ แม่พันธ์', size: 'xxs', color: '#968E82' },
         ],
       },
       { type: 'text', text: '›', flex: 0, size: 'xl', color: '#C9922E' },
@@ -79,8 +79,11 @@ const ORDER_FLEX: messagingApi.FlexMessage = {
     body: {
       type: 'box',
       layout: 'vertical',
-      backgroundColor: '#0D0D0D',
-      paddingAll: '16px',
+      backgroundColor: '#000000',
+      paddingTop: '0px',
+      paddingStart: '20px',
+      paddingEnd: '20px',
+      paddingBottom: '20px',
       spacing: '10px',
       contents: [
         lineOrderButton(),
