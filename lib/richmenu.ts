@@ -115,7 +115,7 @@ type Product = {
   carouselHeroUrl: string;
   weightLabel: string;
   price: string;
-  detailImageUrl: string;
+  detailHeroUrl: string;
   buyUri: string;
 };
 
@@ -125,7 +125,7 @@ const PRODUCTS: Product[] = [
     carouselHeroUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789247264/menu-plasalid.png.png',
     weightLabel: '150 กรัม',
     price: '฿199',
-    detailImageUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789247424/detail-plasalid.png.png',
+    detailHeroUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789249530/detail-plasalidV2.png.png',
     buyUri: 'https://shop.line.me/@067xnyhv/product/1008331248',
   },
   {
@@ -133,7 +133,7 @@ const PRODUCTS: Product[] = [
     carouselHeroUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789247262/menu-kungsiab.png.png',
     weightLabel: '150 กรัม',
     price: '฿179',
-    detailImageUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789247425/detail-kungsiab.png.png',
+    detailHeroUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789249530/detail-kungsiabV2.png.png',
     buyUri: 'https://shop.line.me/@067xnyhv/product/1008331291',
   },
 ];
@@ -169,6 +169,8 @@ function productCarouselBubble(product: Product): messagingApi.FlexBubble {
       layout: 'vertical',
       backgroundColor: '#000000',
       paddingAll: '16px',
+      paddingStart: '20%',
+      paddingEnd: '20%',
       spacing: 'sm',
       contents: [
         {
@@ -225,21 +227,26 @@ const MENU_CAROUSEL: messagingApi.FlexMessage = {
 function productDetailMessages(product: Product): messagingApi.Message[] {
   return [
     {
-      type: 'image',
-      originalContentUrl: product.detailImageUrl,
-      previewImageUrl: product.detailImageUrl,
-    },
-    {
       type: 'flex',
       altText: 'รายละเอียดสินค้า',
       contents: {
         type: 'bubble',
         size: 'mega',
+        hero: {
+          type: 'image',
+          url: product.detailHeroUrl,
+          aspectRatio: '1040:1450',
+          aspectMode: 'cover',
+          size: 'full',
+        },
         body: {
           type: 'box',
           layout: 'vertical',
           backgroundColor: '#000000',
-          paddingAll: '16px',
+          paddingTop: '16px',
+          paddingBottom: '16px',
+          paddingStart: '20%',
+          paddingEnd: '20%',
           spacing: 'sm',
           contents: [
             buyButton(product.buyUri),
@@ -259,14 +266,24 @@ function productDetailMessages(product: Product): messagingApi.Message[] {
             },
             {
               type: 'text',
-              text: 'ระดับความเผ็ดเป็นการประเมินของทางร้าน อาจต่างกันในแต่ละคน',
+              text: 'ระดับความเผ็ดเป็นการประเมินของทางร้าน',
               size: 'xxs',
               color: '#78716A',
               align: 'center',
               margin: 'md',
-              wrap: true,
+            },
+            {
+              type: 'text',
+              text: 'อาจต่างกันในแต่ละคน',
+              size: 'xxs',
+              color: '#78716A',
+              align: 'center',
             },
           ],
+        },
+        styles: {
+          hero: { backgroundColor: '#000000' },
+          body: { backgroundColor: '#000000' },
         },
       },
     },
