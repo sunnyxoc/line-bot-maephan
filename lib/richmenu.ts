@@ -110,12 +110,178 @@ const ORDER_FLEX: messagingApi.FlexMessage = {
   },
 };
 
+type Product = {
+  keyword: string;
+  carouselHeroUrl: string;
+  weightLabel: string;
+  price: string;
+  detailImageUrl: string;
+  buyUri: string;
+};
+
+const PRODUCTS: Product[] = [
+  {
+    keyword: 'รายละเอียดปลาสลิด',
+    carouselHeroUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789232004/1.png',
+    weightLabel: '150 กรัม',
+    price: '฿199',
+    detailImageUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789231830/1.png',
+    buyUri: 'https://shop.line.me/@067xnyhv/product/1008331248',
+  },
+  {
+    keyword: 'รายละเอียดกุ้งเสียบ',
+    carouselHeroUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789232005/2.png',
+    weightLabel: '150 กรัม',
+    price: '฿179',
+    detailImageUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789231844/2.png',
+    buyUri: 'https://shop.line.me/@067xnyhv/product/1008331291',
+  },
+];
+
+function buyButton(uri: string): messagingApi.FlexBox {
+  return {
+    type: 'box',
+    layout: 'vertical',
+    backgroundColor: '#E6C88A',
+    cornerRadius: '10px',
+    paddingAll: '14px',
+    alignItems: 'center',
+    action: { type: 'uri', uri },
+    contents: [
+      { type: 'text', text: 'เลือกซื้อ', size: 'lg', weight: 'bold', color: '#100C08', align: 'center' },
+    ],
+  };
+}
+
+function productCarouselBubble(product: Product): messagingApi.FlexBubble {
+  return {
+    type: 'bubble',
+    size: 'mega',
+    hero: {
+      type: 'image',
+      url: product.carouselHeroUrl,
+      aspectRatio: '1040:845',
+      aspectMode: 'cover',
+      size: 'full',
+    },
+    body: {
+      type: 'box',
+      layout: 'vertical',
+      backgroundColor: '#000000',
+      paddingAll: '16px',
+      spacing: 'sm',
+      contents: [
+        {
+          type: 'box',
+          layout: 'horizontal',
+          spacing: '12px',
+          contents: [
+            {
+              type: 'box',
+              layout: 'vertical',
+              flex: 1,
+              backgroundColor: '#121210',
+              cornerRadius: '10px',
+              paddingAll: '12px',
+              alignItems: 'center',
+              contents: [
+                { type: 'text', text: product.weightLabel, size: 'xs', color: '#9E968A', align: 'center' },
+                { type: 'text', text: product.price, size: 'xl', weight: 'bold', color: '#E6C88A', align: 'center' },
+              ],
+            },
+            {
+              type: 'box',
+              layout: 'vertical',
+              flex: 1,
+              backgroundColor: '#16130F',
+              cornerRadius: '10px',
+              paddingAll: '12px',
+              borderColor: '#CDAF76',
+              borderWidth: '2px',
+              alignItems: 'center',
+              justifyContent: 'center',
+              action: { type: 'message', text: product.keyword },
+              contents: [
+                { type: 'text', text: 'รายละเอียด', size: 'md', weight: 'bold', color: '#FFFFFF', align: 'center' },
+              ],
+            },
+          ],
+        },
+        buyButton(product.buyUri),
+      ],
+    },
+  };
+}
+
+const MENU_CAROUSEL: messagingApi.FlexMessage = {
+  type: 'flex',
+  altText: 'เมนูสินค้าแม่พันธ์',
+  contents: {
+    type: 'carousel',
+    contents: PRODUCTS.map(productCarouselBubble),
+  },
+};
+
+function productDetailMessages(product: Product): messagingApi.Message[] {
+  return [
+    {
+      type: 'image',
+      originalContentUrl: product.detailImageUrl,
+      previewImageUrl: product.detailImageUrl,
+    },
+    {
+      type: 'flex',
+      altText: 'รายละเอียดสินค้า',
+      contents: {
+        type: 'bubble',
+        size: 'mega',
+        body: {
+          type: 'box',
+          layout: 'vertical',
+          backgroundColor: '#000000',
+          paddingAll: '16px',
+          spacing: 'sm',
+          contents: [
+            buyButton(product.buyUri),
+            {
+              type: 'box',
+              layout: 'vertical',
+              backgroundColor: '#16130F',
+              cornerRadius: '10px',
+              paddingAll: '14px',
+              borderColor: '#CDAF76',
+              borderWidth: '2px',
+              alignItems: 'center',
+              action: { type: 'uri', uri: 'https://liff.line.me/1572442362-jGxDDGRp/@067xnyhv' },
+              contents: [
+                { type: 'text', text: 'ดูสินค้าอื่น', size: 'md', weight: 'bold', color: '#FFFFFF', align: 'center' },
+              ],
+            },
+            {
+              type: 'text',
+              text: 'ระดับความเผ็ดเป็นการประเมินของทางร้าน อาจต่างกันในแต่ละคน',
+              size: 'xxs',
+              color: '#78716A',
+              align: 'center',
+              margin: 'md',
+              wrap: true,
+            },
+          ],
+        },
+      },
+    },
+  ];
+}
+
 export function handleRichMenu(text: string): RichMenuResult | null {
   const trimmed = text.trim();
 
   switch (trimmed) {
     case 'สั่งซื้อสินค้า':
       return { action: 'reply', keyword: trimmed, messages: [ORDER_FLEX] };
+
+    case 'เมนูสินค้า':
+      return { action: 'reply', keyword: trimmed, messages: [MENU_CAROUSEL] };
 
     case 'ติดต่อแอดมิน':
       return {
@@ -125,13 +291,15 @@ export function handleRichMenu(text: string): RichMenuResult | null {
         messages: [{ type: 'text', text: CONTACT_ADMIN_REPLY }],
       };
 
-    case 'เมนูสินค้า':
     case 'โปรโมชั่น':
     case 'ติดตามพัสดุ':
     case 'คำถามที่พบบ่อย':
       return null;
 
-    default:
-      return null;
+    default: {
+      const product = PRODUCTS.find((item) => item.keyword === trimmed);
+      if (!product) return null;
+      return { action: 'reply', keyword: trimmed, messages: productDetailMessages(product) };
+    }
   }
 }
