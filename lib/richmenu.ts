@@ -14,53 +14,95 @@ export type RichMenuResult =
       muteMinutes: number;
     };
 
-const ORDER_LEAD_TEXT: messagingApi.TextMessage = {
-  type: 'text',
-  text: 'เลือกช่องทางที่สะดวกได้เลยครับ',
-};
+function lineOrderButton(): messagingApi.FlexBox {
+  return {
+    type: 'box',
+    layout: 'horizontal',
+    cornerRadius: '12px',
+    paddingAll: '14px',
+    alignItems: 'center',
+    backgroundColor: '#C9922E',
+    action: { type: 'message', text: 'สั่งซื้อผ่านไลน์' },
+    contents: [
+      {
+        type: 'box',
+        layout: 'vertical',
+        flex: 1,
+        contents: [
+          { type: 'text', text: 'สั่งผ่าน LINE', size: 'md', weight: 'bold', color: '#1A1A1A' },
+          { type: 'text', text: 'คุยกับแอดมิน • แนะนำสินค้าให้ได้', size: 'xs', color: '#4A3A1A' },
+        ],
+      },
+      { type: 'text', text: '›', flex: 0, size: 'xl', color: '#1A1A1A' },
+    ],
+  };
+}
+
+function marketplaceOrderButton(title: string, uri: string): messagingApi.FlexBox {
+  return {
+    type: 'box',
+    layout: 'horizontal',
+    cornerRadius: '12px',
+    paddingAll: '14px',
+    alignItems: 'center',
+    backgroundColor: '#1A1613',
+    borderColor: '#3D3428',
+    borderWidth: '1px',
+    action: { type: 'uri', uri },
+    contents: [
+      {
+        type: 'box',
+        layout: 'vertical',
+        flex: 1,
+        contents: [
+          { type: 'text', text: title, size: 'md', weight: 'bold', color: '#F5EDE0' },
+          { type: 'text', text: 'ร้านค้าทางการ แม่พันธ์', size: 'xs', color: '#9C8B73' },
+        ],
+      },
+      { type: 'text', text: '›', flex: 0, size: 'xl', color: '#C9922E' },
+    ],
+  };
+}
 
 const ORDER_FLEX: messagingApi.FlexMessage = {
   type: 'flex',
   altText: 'สั่งซื้อกับแม่พันธ์',
   contents: {
     type: 'bubble',
+    hero: {
+      type: 'image',
+      url: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789186400/maephan-order.png',
+      size: 'full',
+      aspectRatio: '20:13',
+      aspectMode: 'cover',
+    },
     body: {
       type: 'box',
       layout: 'vertical',
+      backgroundColor: '#0D0D0D',
+      paddingAll: '16px',
+      spacing: '10px',
       contents: [
-        { type: 'text', text: 'สั่งซื้อกับแม่พันธ์', weight: 'bold', size: 'lg' },
+        lineOrderButton(),
+        marketplaceOrderButton('สั่งผ่าน Shopee', 'https://shopee.co.th/shop/1914406878'),
+        marketplaceOrderButton('สั่งผ่าน Lazada', 'https://www.lazada.co.th/shop/mae-phan'),
+        marketplaceOrderButton('สั่งผ่าน TikTok Shop', 'https://vt.tiktok.com/ZSqPtM7cB/?page=TikTokShop'),
       ],
     },
     footer: {
       type: 'box',
       layout: 'vertical',
-      spacing: 'sm',
+      backgroundColor: '#0D0D0D',
+      paddingAll: '14px',
       contents: [
-        {
-          type: 'button',
-          style: 'primary',
-          action: { type: 'message', label: 'สั่งผ่าน LINE', text: 'สั่งซื้อผ่านไลน์' },
-        },
-        {
-          type: 'button',
-          style: 'secondary',
-          action: { type: 'uri', label: 'Shopee', uri: 'https://shopee.co.th/shop/1914406878' },
-        },
-        {
-          type: 'button',
-          style: 'secondary',
-          action: { type: 'uri', label: 'Lazada', uri: 'https://www.lazada.co.th/shop/mae-phan' },
-        },
-        {
-          type: 'button',
-          style: 'secondary',
-          action: {
-            type: 'uri',
-            label: 'TikTok Shop',
-            uri: 'https://vt.tiktok.com/ZSqPtM7cB/?page=TikTokShop',
-          },
-        },
+        { type: 'separator', color: '#3D3428' },
+        { type: 'text', text: 'รสชาติที่ใส่ใจในทุกคำ', size: 'xs', color: '#C9922E', align: 'center', margin: 'md' },
       ],
+    },
+    styles: {
+      hero: { backgroundColor: '#0D0D0D' },
+      body: { backgroundColor: '#0D0D0D' },
+      footer: { backgroundColor: '#0D0D0D' },
     },
   },
 };
@@ -70,7 +112,7 @@ export function handleRichMenu(text: string): RichMenuResult | null {
 
   switch (trimmed) {
     case 'สั่งซื้อสินค้า':
-      return { action: 'reply', keyword: trimmed, messages: [ORDER_LEAD_TEXT, ORDER_FLEX] };
+      return { action: 'reply', keyword: trimmed, messages: [ORDER_FLEX] };
 
     case 'ติดต่อแอดมิน':
       return {
