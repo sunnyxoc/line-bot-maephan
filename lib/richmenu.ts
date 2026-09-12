@@ -1,9 +1,7 @@
 import { messagingApi } from '@line/bot-sdk';
+import { CONTACT_ADMIN_REPLY } from './gemini';
 
 export const RICHMENU_MUTE_MINUTES = 120;
-
-export const CONTACT_ADMIN_REPLY =
-  'รับทราบครับ เดี๋ยวแอดมินร้านมาดูแลต่อนะครับ 🙏 หรือโทรหาทางร้านได้ที่ 098-246-8881 ครับ';
 
 export type RichMenuResult =
   | { action: 'reply'; keyword: string; messages: messagingApi.Message[] }

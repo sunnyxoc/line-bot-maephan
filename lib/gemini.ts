@@ -17,6 +17,9 @@ export const MUTE_MINUTES = 120;
 export const HANDOVER_REPLY =
   'รับทราบครับ ขออภัยในความไม่สะดวก เดี๋ยวแอดมินร้านมาดูแลเรื่องนี้ให้โดยตรงนะครับ 🙏 หรือโทรหาทางร้านได้ที่ 098-246-8881 ครับ';
 
+export const CONTACT_ADMIN_REPLY =
+  'รับทราบครับ\nเดี๋ยวแอดมินร้าน\nมาดูแลต่อนะครับ 🙏\nหรือโทร 098-246-8881';
+
 export const MUTE_ON_KEYWORDS = ['#หยุดบอท', '#ปิดบอท'];
 export const UNMUTE_ON_KEYWORDS = ['#เปิดบอท', '#เริ่มบอท'];
 
