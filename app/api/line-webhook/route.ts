@@ -13,6 +13,7 @@ import {
 } from '@/lib/gemini';
 import { isMuted, mute, unmute } from '@/lib/mute';
 import { handleRichMenu } from '@/lib/richmenu';
+import { notifyAdmin } from '@/lib/notify';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -70,6 +71,11 @@ function getConversationId(event: WebhookEvent): string | null {
   return null;
 }
 
+function isFromAdmin(event: WebhookEvent): boolean {
+  const adminUserId = process.env.ADMIN_USER_ID;
+  return Boolean(adminUserId) && event.source?.userId === adminUserId;
+}
+
 async function handleEvent(event: WebhookEvent) {
   if (event.type !== 'message') return;
 
@@ -108,6 +114,9 @@ async function handleEvent(event: WebhookEvent) {
       await replyMessages(replyToken, richMenuResult.messages);
       if (richMenuResult.action === 'reply_and_mute' && conversationId) {
         await mute(conversationId, richMenuResult.muteMinutes);
+        if (!isFromAdmin(event)) {
+          waitUntil(notifyAdmin({ userMessage: text, reason: 'contact' }));
+        }
       }
       return;
     }
@@ -126,6 +135,9 @@ async function handleEvent(event: WebhookEvent) {
         reason: 'complaint detected',
         keyword: matchedKeyword,
       }));
+      if (!isFromAdmin(event)) {
+        waitUntil(notifyAdmin({ userMessage: text, reason: 'complaint' }));
+      }
       return;
     }
   }
