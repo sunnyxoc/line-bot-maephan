@@ -144,11 +144,12 @@ function buyButton(uri: string): messagingApi.FlexBox {
     layout: 'vertical',
     backgroundColor: '#E6C88A',
     cornerRadius: '10px',
-    paddingAll: '14px',
+    paddingTop: '10px',
+    paddingBottom: '10px',
     alignItems: 'center',
     action: { type: 'uri', uri },
     contents: [
-      { type: 'text', text: 'เลือกซื้อ', size: 'lg', weight: 'bold', color: '#100C08', align: 'center' },
+      { type: 'text', text: 'เลือกซื้อ', size: 'md', weight: 'bold', color: '#100C08', align: 'center' },
     ],
   };
 }
@@ -169,9 +170,9 @@ function productCarouselBubble(product: Product): messagingApi.FlexBubble {
       layout: 'vertical',
       backgroundColor: '#000000',
       paddingAll: '16px',
-      paddingStart: '20%',
-      paddingEnd: '20%',
-      spacing: 'sm',
+      paddingStart: '16px',
+      paddingEnd: '16px',
+      spacing: 'xs',
       contents: [
         {
           type: 'box',
@@ -184,11 +185,12 @@ function productCarouselBubble(product: Product): messagingApi.FlexBubble {
               flex: 1,
               backgroundColor: '#121210',
               cornerRadius: '10px',
-              paddingAll: '12px',
+              paddingTop: '8px',
+              paddingBottom: '8px',
               alignItems: 'center',
               contents: [
                 { type: 'text', text: product.weightLabel, size: 'xs', color: '#9E968A', align: 'center' },
-                { type: 'text', text: product.price, size: 'xl', weight: 'bold', color: '#E6C88A', align: 'center' },
+                { type: 'text', text: product.price, size: 'lg', weight: 'bold', color: '#E6C88A', align: 'center' },
               ],
             },
             {
@@ -197,14 +199,15 @@ function productCarouselBubble(product: Product): messagingApi.FlexBubble {
               flex: 1,
               backgroundColor: '#16130F',
               cornerRadius: '10px',
-              paddingAll: '12px',
+              paddingTop: '8px',
+              paddingBottom: '8px',
               borderColor: '#CDAF76',
               borderWidth: '2px',
               alignItems: 'center',
               justifyContent: 'center',
               action: { type: 'message', text: product.keyword },
               contents: [
-                { type: 'text', text: 'รายละเอียด', size: 'md', weight: 'bold', color: '#FFFFFF', align: 'center' },
+                { type: 'text', text: 'รายละเอียด', size: 'sm', weight: 'bold', color: '#FFFFFF', align: 'center' },
               ],
             },
           ],
@@ -245,9 +248,9 @@ function productDetailMessages(product: Product): messagingApi.Message[] {
           backgroundColor: '#000000',
           paddingTop: '16px',
           paddingBottom: '16px',
-          paddingStart: '20%',
-          paddingEnd: '20%',
-          spacing: 'sm',
+          paddingStart: '16px',
+          paddingEnd: '16px',
+          spacing: 'xs',
           contents: [
             buyButton(product.buyUri),
             {
@@ -255,13 +258,14 @@ function productDetailMessages(product: Product): messagingApi.Message[] {
               layout: 'vertical',
               backgroundColor: '#16130F',
               cornerRadius: '10px',
-              paddingAll: '14px',
+              paddingTop: '10px',
+              paddingBottom: '10px',
               borderColor: '#CDAF76',
               borderWidth: '2px',
               alignItems: 'center',
               action: { type: 'uri', uri: 'https://liff.line.me/1572442362-jGxDDGRp/@067xnyhv' },
               contents: [
-                { type: 'text', text: 'ดูสินค้าอื่น', size: 'md', weight: 'bold', color: '#FFFFFF', align: 'center' },
+                { type: 'text', text: 'ดูสินค้าอื่น', size: 'sm', weight: 'bold', color: '#FFFFFF', align: 'center' },
               ],
             },
             {
