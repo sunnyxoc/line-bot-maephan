@@ -3,6 +3,12 @@ import { CONTACT_ADMIN_REPLY } from './gemini';
 
 export const RICHMENU_MUTE_MINUTES = 120;
 
+const PROMO_IMAGE: messagingApi.ImageMessage = {
+  type: 'image',
+  originalContentUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789308533/maephan-promo.png',
+  previewImageUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789308533/maephan-promo.png',
+};
+
 export type RichMenuResult =
   | { action: 'reply'; keyword: string; messages: messagingApi.Message[] }
   | {
@@ -311,6 +317,8 @@ export function handleRichMenu(text: string): RichMenuResult | null {
       };
 
     case 'โปรโมชั่น':
+      return { action: 'reply', keyword: trimmed, messages: [PROMO_IMAGE] };
+
     case 'ติดตามพัสดุ':
     case 'คำถามที่พบบ่อย':
       return null;
