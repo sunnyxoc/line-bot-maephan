@@ -3,12 +3,6 @@ import { CONTACT_ADMIN_REPLY } from './gemini';
 
 export const RICHMENU_MUTE_MINUTES = 120;
 
-const PROMO_IMAGE: messagingApi.ImageMessage = {
-  type: 'image',
-  originalContentUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789308533/maephan-promo.png',
-  previewImageUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789308533/maephan-promo.png',
-};
-
 export type RichMenuResult =
   | { action: 'reply'; keyword: string; messages: messagingApi.Message[] }
   | {
@@ -26,7 +20,7 @@ function lineOrderButton(): messagingApi.FlexBox {
     paddingAll: '10px',
     alignItems: 'center',
     backgroundColor: '#E6C88A',
-    action: { type: 'message', text: 'สั่งซื้อผ่านไลน์' },
+    action: { type: 'uri', uri: 'https://liff.line.me/1572442362-jGxDDGRp/@067xnyhv' },
     contents: [
       {
         type: 'box',
@@ -119,7 +113,7 @@ type Product = {
   carouselHeroUrl: string;
   weightLabel: string;
   price: string;
-  detailHeroUrl: string;
+  detailImages: string[];
   buyUri: string;
 };
 
@@ -129,7 +123,7 @@ const PRODUCTS: Product[] = [
     carouselHeroUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789247264/menu-plasalid.png.png',
     weightLabel: '150 กรัม',
     price: '฿199',
-    detailHeroUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789249530/detail-plasalidV2.png.png',
+    detailImages: ['https://res.cloudinary.com/pqc4oisc/image/upload/v1789249530/detail-plasalidV2.png.png'],
     buyUri: 'https://shop.line.me/@067xnyhv/product/1008331248',
   },
   {
@@ -137,12 +131,23 @@ const PRODUCTS: Product[] = [
     carouselHeroUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789247262/menu-kungsiab.png.png',
     weightLabel: '150 กรัม',
     price: '฿179',
-    detailHeroUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789249530/detail-kungsiabV2.png.png',
+    detailImages: ['https://res.cloudinary.com/pqc4oisc/image/upload/v1789249530/detail-kungsiabV2.png.png'],
     buyUri: 'https://shop.line.me/@067xnyhv/product/1008331291',
+  },
+  {
+    keyword: 'รายละเอียดเซ็ตลิ้มลอง',
+    carouselHeroUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789377350/menu-set349.png',
+    weightLabel: '150 กรัม × 2',
+    price: '฿349',
+    detailImages: [
+      'https://res.cloudinary.com/pqc4oisc/image/upload/v1789390239/detail-set349-1.png',
+      'https://res.cloudinary.com/pqc4oisc/image/upload/v1789390238/detail-set349-2.png',
+    ],
+    buyUri: 'https://shop.line.me/@067xnyhv/product/1008335668',
   },
 ];
 
-function buyButton(uri: string): messagingApi.FlexBox {
+function actionButton(label: string, action: messagingApi.Action): messagingApi.FlexBox {
   return {
     type: 'box',
     layout: 'vertical',
@@ -151,11 +156,15 @@ function buyButton(uri: string): messagingApi.FlexBox {
     paddingTop: '10px',
     paddingBottom: '10px',
     alignItems: 'center',
-    action: { type: 'uri', uri },
+    action,
     contents: [
-      { type: 'text', text: 'เลือกซื้อ', size: 'md', weight: 'bold', color: '#100C08', align: 'center' },
+      { type: 'text', text: label, size: 'md', weight: 'bold', color: '#100C08', align: 'center' },
     ],
   };
+}
+
+function buyButton(uri: string): messagingApi.FlexBox {
+  return actionButton('เลือกซื้อ', { type: 'uri', uri });
 }
 
 function productCarouselBubble(product: Product): messagingApi.FlexBubble {
@@ -165,7 +174,7 @@ function productCarouselBubble(product: Product): messagingApi.FlexBubble {
     hero: {
       type: 'image',
       url: product.carouselHeroUrl,
-      aspectRatio: '1040:845',
+      aspectRatio: '2080:1690',
       aspectMode: 'cover',
       size: 'full',
     },
@@ -231,71 +240,139 @@ const MENU_CAROUSEL: messagingApi.FlexMessage = {
   },
 };
 
-function productDetailMessages(product: Product): messagingApi.Message[] {
+type PromoBubble = {
+  heroUrl: string;
+  action: messagingApi.Action;
+};
+
+const PROMO_BUBBLES: PromoBubble[] = [
+  {
+    heroUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789377325/maephan-promo-newcustomer-light_2.png',
+    action: { type: 'message', text: 'สั่งซื้อสินค้า' },
+  },
+  {
+    heroUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789377325/maephan-MPFM01-light_2.png',
+    action: { type: 'uri', uri: 'https://liff.line.me/1572442362-jGxDDGRp/@067xnyhv' },
+  },
+  {
+    heroUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789356986/maephan-FREE349-light.png',
+    action: { type: 'uri', uri: 'https://liff.line.me/1572442362-jGxDDGRp/@067xnyhv' },
+  },
+];
+
+function promoCarouselBubble({ heroUrl, action }: PromoBubble): messagingApi.FlexBubble {
+  return {
+    type: 'bubble',
+    size: 'mega',
+    hero: {
+      type: 'image',
+      url: heroUrl,
+      aspectRatio: '2080:1690',
+      aspectMode: 'cover',
+      size: 'full',
+    },
+    body: {
+      type: 'box',
+      layout: 'vertical',
+      backgroundColor: '#000000',
+      paddingAll: '16px',
+      contents: [actionButton('สั่งซื้อเลย', action)],
+    },
+  };
+}
+
+const PROMO_CAROUSEL: messagingApi.FlexMessage = {
+  type: 'flex',
+  altText: 'โปรโมชั่นแม่พันธ์',
+  contents: {
+    type: 'carousel',
+    contents: PROMO_BUBBLES.map(promoCarouselBubble),
+  },
+};
+
+function detailBodyContents(buyUri: string): messagingApi.FlexComponent[] {
   return [
+    buyButton(buyUri),
     {
-      type: 'flex',
-      altText: 'รายละเอียดสินค้า',
-      contents: {
-        type: 'bubble',
-        size: 'mega',
+      type: 'box',
+      layout: 'vertical',
+      backgroundColor: '#16130F',
+      cornerRadius: '10px',
+      paddingTop: '10px',
+      paddingBottom: '10px',
+      borderColor: '#CDAF76',
+      borderWidth: '2px',
+      alignItems: 'center',
+      action: { type: 'uri', uri: 'https://liff.line.me/1572442362-jGxDDGRp/@067xnyhv' },
+      contents: [
+        { type: 'text', text: 'ดูสินค้าอื่น', size: 'sm', weight: 'bold', color: '#FFFFFF', align: 'center' },
+      ],
+    },
+    {
+      type: 'text',
+      text: 'ระดับความเผ็ดเป็นการประเมินของทางร้าน',
+      size: 'xxs',
+      color: '#78716A',
+      align: 'center',
+      margin: 'md',
+    },
+    {
+      type: 'text',
+      text: 'อาจต่างกันในแต่ละคน',
+      size: 'xxs',
+      color: '#78716A',
+      align: 'center',
+    },
+  ];
+}
+
+function detailBubbleMessage(buyUri: string, heroUrl?: string): messagingApi.FlexMessage {
+  return {
+    type: 'flex',
+    altText: 'รายละเอียดสินค้า',
+    contents: {
+      type: 'bubble',
+      size: 'mega',
+      ...(heroUrl && {
         hero: {
           type: 'image',
-          url: product.detailHeroUrl,
+          url: heroUrl,
           aspectRatio: '1040:1450',
           aspectMode: 'cover',
           size: 'full',
         },
-        body: {
-          type: 'box',
-          layout: 'vertical',
-          backgroundColor: '#000000',
-          paddingTop: '16px',
-          paddingBottom: '16px',
-          paddingStart: '16px',
-          paddingEnd: '16px',
-          spacing: 'xs',
-          contents: [
-            buyButton(product.buyUri),
-            {
-              type: 'box',
-              layout: 'vertical',
-              backgroundColor: '#16130F',
-              cornerRadius: '10px',
-              paddingTop: '10px',
-              paddingBottom: '10px',
-              borderColor: '#CDAF76',
-              borderWidth: '2px',
-              alignItems: 'center',
-              action: { type: 'uri', uri: 'https://liff.line.me/1572442362-jGxDDGRp/@067xnyhv' },
-              contents: [
-                { type: 'text', text: 'ดูสินค้าอื่น', size: 'sm', weight: 'bold', color: '#FFFFFF', align: 'center' },
-              ],
-            },
-            {
-              type: 'text',
-              text: 'ระดับความเผ็ดเป็นการประเมินของทางร้าน',
-              size: 'xxs',
-              color: '#78716A',
-              align: 'center',
-              margin: 'md',
-            },
-            {
-              type: 'text',
-              text: 'อาจต่างกันในแต่ละคน',
-              size: 'xxs',
-              color: '#78716A',
-              align: 'center',
-            },
-          ],
-        },
-        styles: {
-          hero: { backgroundColor: '#000000' },
-          body: { backgroundColor: '#000000' },
-        },
+      }),
+      body: {
+        type: 'box',
+        layout: 'vertical',
+        backgroundColor: '#000000',
+        paddingTop: '16px',
+        paddingBottom: '16px',
+        paddingStart: '16px',
+        paddingEnd: '16px',
+        spacing: 'xs',
+        contents: detailBodyContents(buyUri),
+      },
+      styles: {
+        ...(heroUrl && { hero: { backgroundColor: '#000000' } }),
+        body: { backgroundColor: '#000000' },
       },
     },
-  ];
+  };
+}
+
+function productDetailMessages(product: Product): messagingApi.Message[] {
+  if (product.detailImages.length === 1) {
+    return [detailBubbleMessage(product.buyUri, product.detailImages[0])];
+  }
+
+  const imageMessages: messagingApi.ImageMessage[] = product.detailImages.map((url) => ({
+    type: 'image',
+    originalContentUrl: url,
+    previewImageUrl: url,
+  }));
+
+  return [...imageMessages, detailBubbleMessage(product.buyUri)];
 }
 
 export function handleRichMenu(text: string): RichMenuResult | null {
@@ -317,7 +394,7 @@ export function handleRichMenu(text: string): RichMenuResult | null {
       };
 
     case 'โปรโมชั่น':
-      return { action: 'reply', keyword: trimmed, messages: [PROMO_IMAGE] };
+      return { action: 'reply', keyword: trimmed, messages: [PROMO_CAROUSEL] };
 
     case 'ติดตามพัสดุ':
     case 'คำถามที่พบบ่อย':
