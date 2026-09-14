@@ -267,7 +267,7 @@ function promoCarouselBubble({ heroUrl, action }: PromoBubble): messagingApi.Fle
     hero: {
       type: 'image',
       url: heroUrl,
-      aspectRatio: '2080:1690',
+      aspectRatio: '1:1',
       aspectMode: 'cover',
       size: 'full',
     },
