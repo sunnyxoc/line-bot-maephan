@@ -242,25 +242,34 @@ const MENU_CAROUSEL: messagingApi.FlexMessage = {
 
 type PromoBubble = {
   heroUrl: string;
+  buttonLabel: string;
   action: messagingApi.Action;
 };
 
 const PROMO_BUBBLES: PromoBubble[] = [
   {
     heroUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789377325/maephan-promo-newcustomer-light_2.png',
+    buttonLabel: 'สั่งซื้อเลย',
     action: { type: 'message', text: 'สั่งซื้อสินค้า' },
   },
   {
     heroUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789377325/maephan-MPFM01-light_2.png',
+    buttonLabel: 'สั่งซื้อเลย',
     action: { type: 'uri', uri: 'https://liff.line.me/1572442362-jGxDDGRp/@067xnyhv' },
   },
   {
     heroUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789356986/maephan-FREE349-light.png',
+    buttonLabel: 'สั่งซื้อเลย',
     action: { type: 'uri', uri: 'https://liff.line.me/1572442362-jGxDDGRp/@067xnyhv' },
+  },
+  {
+    heroUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1790073457/maephan-loyalty-card-dark.png',
+    buttonLabel: 'ดูแต้มสะสมของฉัน',
+    action: { type: 'uri', uri: 'https://u.lin.ee/80YaOJx' },
   },
 ];
 
-function promoCarouselBubble({ heroUrl, action }: PromoBubble): messagingApi.FlexBubble {
+function promoCarouselBubble({ heroUrl, buttonLabel, action }: PromoBubble): messagingApi.FlexBubble {
   return {
     type: 'bubble',
     size: 'mega',
@@ -276,7 +285,7 @@ function promoCarouselBubble({ heroUrl, action }: PromoBubble): messagingApi.Fle
       layout: 'vertical',
       backgroundColor: '#000000',
       paddingAll: '16px',
-      contents: [actionButton('สั่งซื้อเลย', action)],
+      contents: [actionButton(buttonLabel, action)],
     },
   };
 }
