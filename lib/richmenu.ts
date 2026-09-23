@@ -108,12 +108,17 @@ const ORDER_FLEX: messagingApi.FlexMessage = {
   },
 };
 
+type DetailImage = {
+  url: string;
+  aspectRatio: string;
+};
+
 type Product = {
   keyword: string;
   carouselHeroUrl: string;
   weightLabel: string;
   price: string;
-  detailImages: string[];
+  detailImages: DetailImage[];
   buyUri: string;
 };
 
@@ -123,7 +128,9 @@ const PRODUCTS: Product[] = [
     carouselHeroUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789247264/menu-plasalid.png.png',
     weightLabel: '150 กรัม',
     price: '฿199',
-    detailImages: ['https://res.cloudinary.com/pqc4oisc/image/upload/v1789249530/detail-plasalidV2.png.png'],
+    detailImages: [
+      { url: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789249530/detail-plasalidV2.png.png', aspectRatio: '1040:1450' },
+    ],
     buyUri: 'https://shop.line.me/@067xnyhv/product/1008331248',
   },
   {
@@ -131,7 +138,9 @@ const PRODUCTS: Product[] = [
     carouselHeroUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789247262/menu-kungsiab.png.png',
     weightLabel: '150 กรัม',
     price: '฿179',
-    detailImages: ['https://res.cloudinary.com/pqc4oisc/image/upload/v1789249530/detail-kungsiabV2.png.png'],
+    detailImages: [
+      { url: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789249530/detail-kungsiabV2.png.png', aspectRatio: '1040:1450' },
+    ],
     buyUri: 'https://shop.line.me/@067xnyhv/product/1008331291',
   },
   {
@@ -140,8 +149,8 @@ const PRODUCTS: Product[] = [
     weightLabel: '150 กรัม × 2',
     price: '฿349',
     detailImages: [
-      'https://res.cloudinary.com/pqc4oisc/image/upload/v1789390239/detail-set349-1.png',
-      'https://res.cloudinary.com/pqc4oisc/image/upload/v1789390238/detail-set349-2.png',
+      { url: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789390239/detail-set349-1.png', aspectRatio: '2080:2500' },
+      { url: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789390238/detail-set349-2.png', aspectRatio: '2080:1100' },
     ],
     buyUri: 'https://shop.line.me/@067xnyhv/product/1008335668',
   },
@@ -335,18 +344,18 @@ function detailBodyContents(buyUri: string): messagingApi.FlexComponent[] {
   ];
 }
 
-function detailBubbleMessage(buyUri: string, heroUrl?: string): messagingApi.FlexMessage {
+function detailBubbleMessage(buyUri: string, hero?: DetailImage): messagingApi.FlexMessage {
   return {
     type: 'flex',
     altText: 'รายละเอียดสินค้า',
     contents: {
       type: 'bubble',
       size: 'mega',
-      ...(heroUrl && {
+      ...(hero && {
         hero: {
           type: 'image',
-          url: heroUrl,
-          aspectRatio: '1040:1450',
+          url: hero.url,
+          aspectRatio: hero.aspectRatio,
           aspectMode: 'cover',
           size: 'full',
         },
@@ -363,8 +372,26 @@ function detailBubbleMessage(buyUri: string, heroUrl?: string): messagingApi.Fle
         contents: detailBodyContents(buyUri),
       },
       styles: {
-        ...(heroUrl && { hero: { backgroundColor: '#000000' } }),
+        ...(hero && { hero: { backgroundColor: '#000000' } }),
         body: { backgroundColor: '#000000' },
+      },
+    },
+  };
+}
+
+function detailImageBubbleMessage(image: DetailImage): messagingApi.FlexMessage {
+  return {
+    type: 'flex',
+    altText: 'รายละเอียดสินค้า',
+    contents: {
+      type: 'bubble',
+      size: 'mega',
+      hero: {
+        type: 'image',
+        url: image.url,
+        aspectRatio: image.aspectRatio,
+        aspectMode: 'cover',
+        size: 'full',
       },
     },
   };
@@ -375,13 +402,10 @@ function productDetailMessages(product: Product): messagingApi.Message[] {
     return [detailBubbleMessage(product.buyUri, product.detailImages[0])];
   }
 
-  const imageMessages: messagingApi.ImageMessage[] = product.detailImages.map((url) => ({
-    type: 'image',
-    originalContentUrl: url,
-    previewImageUrl: url,
-  }));
-
-  return [...imageMessages, detailBubbleMessage(product.buyUri)];
+  return [
+    ...product.detailImages.map(detailImageBubbleMessage),
+    detailBubbleMessage(product.buyUri),
+  ];
 }
 
 export function handleRichMenu(text: string): RichMenuResult | null {
