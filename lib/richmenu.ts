@@ -144,7 +144,7 @@ const PRODUCTS: Product[] = [
     buyUri: 'https://shop.line.me/@067xnyhv/product/1008331291',
   },
   {
-    keyword: 'รายละเอียดเซ็ตลิ้มลอง',
+    keyword: 'รายละเอียดลิ้มลอง',
     carouselHeroUrl: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789377350/menu-set349.png',
     weightLabel: '150 กรัม × 2',
     price: '฿349',
