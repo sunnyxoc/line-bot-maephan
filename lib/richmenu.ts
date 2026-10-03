@@ -69,7 +69,7 @@ const ORDER_FLEX: messagingApi.FlexMessage = {
     type: 'bubble',
     hero: {
       type: 'image',
-      url: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1789186400/maephan-order.png',
+      url: 'https://res.cloudinary.com/pqc4oisc/image/upload/v1791038172/order.png',
       size: 'full',
       aspectRatio: '20:13',
       aspectMode: 'cover',
